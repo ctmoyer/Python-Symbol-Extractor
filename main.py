@@ -12,9 +12,9 @@ import ast
 from pathlib import Path
 from pprint import pprint
 
-from argHandler import getParsedOptions
+from argHandler import getArgs, getParsedOptions
 import customData
-import helpers._utils as _utils
+import helpers._utils as utils
 from symbolAnalyzer import FuncLister
 from helpers.astpp import dump
 
@@ -46,21 +46,31 @@ def main():
     
     # dump(tree) outputs a string version of the tree structure
     # print(dump(tree))
+    
+    print(nodes.foundNodes)
     for node in nodes.foundNodes:
         if(node.name == None): 
             del node
             continue
 
-        # ID represents parentCtx + Func label
-        if(node.parent.name == '__root__'): print(f'\nID: {node.name}')
-        else: print(f'\nID: {node.parent.name}/{node.name}')
-
-        print(node.lineno)
-
         fileName = args['file'][0].resolve()
         fileName = f'{fileName.relative_to(workingDirectory)}'
+        # test = customData.FunctionDef_Symbol(node, node.parent, fileName)
+        # print(test.name)
+        # Index represents parentCtx + Func label
+        if(node.parent.name == '__root__'): 
+            print(f'\nID: {fileName}::{node.name}')
+            print(f'Name: {node.name}')
+        else: 
+            print(f'\nID: {fileName}::{node.parent.name}/{node.name}')
+            print(f'Name: {node.parent.name}/{node.name}')
+
+
         print(f'File Path: {fileName}')
+        print('Line Number: {node.lineno}')
         print('Type: FunctionDefiniton')
+        nodeArgs = utils.GatherArgs(node)        
+        print(f'args: {nodeArgs}')
 
         # Determine if return exists, and what type to expect, if available
         if(node.returns and node.returns != None):
@@ -71,6 +81,7 @@ def main():
             for child in node.body:
                 if(isinstance(child, ast.Return)): returnExists = True
             print(f'Return: {returnExists}')
+
 
 
 if __name__ == '__main__':
