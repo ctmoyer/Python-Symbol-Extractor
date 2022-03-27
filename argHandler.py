@@ -14,6 +14,9 @@ def getArgs() -> dict:
                             Positive integers represent how many layers deep the recursion should explore.\
                             -1 is the Default value when no value is supplied but thif flag is present.\
                             When a negative number is present, the recursion will explore all subfolders without limit." )
+    parser.add_argument( '-d','--dump', nargs='?', type=bool, const=True, default=False, 
+                        help='Print a human readable version of the AST found by configured visitor methods.')
+
     return vars(parser.parse_args())
 
 def getParsedOptions() -> dict:
@@ -21,7 +24,8 @@ def getParsedOptions() -> dict:
     optionsDict = {
         'file': None,
         'folder': None,
-        'recursionLevel': None
+        'recursionLevel': None,
+        'dump': None
     }
 
     for option in argsDict:
@@ -30,6 +34,8 @@ def getParsedOptions() -> dict:
         elif option in ('folder'):
             optionsDict[option] = argsDict[option]
         elif option in ('recursionLevel'):
+            optionsDict[option] = argsDict[option]
+        elif option in ('dump'):
             optionsDict[option] = argsDict[option]
         else:
             assert False, f'Unhandled Exception; Option: {option}'

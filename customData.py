@@ -30,26 +30,30 @@ class SymbolRelationship():
 
 @dataclass(order=True)
 class Generic_Symbol():
+    node: ast = field( repr=False, compare=False)
+    parent: ast = field( repr=False, compare=False)
     fileName: str
-    parent: ast = field( repr=False)
-    node: ast = field( repr=False)
     # Puts all following fields after fields without defaults.
     _: KW_ONLY
     parentName: str = field(init=False)
     name: str = field(init=False)
-    index: str = field( init=False, repr=False )    
-    id: UUID = field( default_factory=uuid4, init=False )
     nodeType: str = field(default='Generic')
+    lineNum: int = field(init=False)
+    id: UUID = field( default_factory=uuid4, init=False, repr=False )
     scope: str = field( init=False, repr=False )
-    lineNum: int = field(init=False, repr=False)
+    index: str = field( init=False, repr=False, compare=False )    
     
     def __post_init__(self):
         #TODO update .name assignments to be type sensitive
-        self.name = f'{utils.getNodeIdentifiers(self.node)}'
-        self.parentName = f'{utils.getNodeIdentifiers(self.parent.name)}'
+        self.name = utils.getNodeIdentifiers(self.node)
+        self.parentName = utils.getNodeIdentifiers(self.parent)
+        print(f'Parent Node: {self.parent}')
         self.lineNum = self.node.lineno
-        if(self.parent.name != None):
-            self.scope = f'{self.fileName}::{self.parent.name}/{self.name}'
+        # Scope and index serve different purposes
+        # Scope is intended to provide information about the context 
+        # Index is intended to provide a field to sort and query by
+        if(self.parentName not in [None, '']):
+            self.scope = f'{self.fileName}::{self.parentName}/{self.name}'
         else: self.scope = f'{self.fileName}::{self.name}'
         self.index = f'{self.fileName}::{self.parentName}/{self.name}'
 
@@ -61,6 +65,7 @@ class FunctionDef_Symbol(Generic_Symbol):
 
     def __post_init__(self):
         # self.name = self.node.name
+        super().__post_init__()
         self.nodeType = 'FunctionDef'
         self.args = utils.GatherArgs(self.node)
 
@@ -74,18 +79,20 @@ class FunctionDef_Symbol(Generic_Symbol):
                 if(isinstance(child, ast.Return)): returnExists = True
             self.returns = returnExists
 
-
 @dataclass(order=True)
 class Assign_Symbol(Generic_Symbol):
-    targets: list
     _: KW_ONLY
+    targets: list
     targetNames: list = field( init=False)
 
     def __post_init__(self):
+        # self.name = self.node.name
+        super().__post_init__()
         newTargets = []
         for target in self.targets:
             newTargets.append(target.id)
         self.targetNames = newTargets
+
 
 """ AnnAssign is set for support in the Typing Release """
 # @dataclass

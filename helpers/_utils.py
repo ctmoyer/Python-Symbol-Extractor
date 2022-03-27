@@ -1,4 +1,4 @@
-from ast import arguments, Assign, FunctionDef, Name, Attribute
+from ast import ClassDef, arguments, Assign, FunctionDef, Name, Attribute
 # import ast
 from hashlib import sha1
 import os
@@ -29,16 +29,19 @@ def getFileHexHash(filePath)->int:
     return hash.hexdigest()
 
 def getNodeIdentifiers(node):
-    idens = []
+    idens = ''
     if(isinstance(node, Assign)):
+        acc = []
         for target in node.targets: 
-            idens.append(getNodeIdentifiers(target))
-    if(isinstance(node, FunctionDef)):
-        idens.append(node.name)
+            acc.append(getNodeIdentifiers(target))
+        idens = acc[0:]
+    if(isinstance(node, FunctionDef) or isinstance(node, ClassDef)):
+        idens=node.name
     if(isinstance(node, Name)):
-        idens.append(node.id)
+        idens=node.id
     if(isinstance(node, Attribute)):
-        idens.append(f'{getNodeIdentifiers(node.value)}.{node.attr}')
+        idens=f'{getNodeIdentifiers(node.value)}.{node.attr}'
+    # print(f'idens: {node}')
     return idens
 
 

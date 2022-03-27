@@ -17,9 +17,15 @@ def analyzeFile(filePath):
 
 class Analyzer(ast.NodeVisitor):
     functions = {}
+    foundNodes = []
 
     def __init__(self):
         self.stats = {"import": [], "from": []}
+
+    def visit_FunctionDef(self, node):
+        # print(node.name)
+        self.foundNodes.append(node)
+        self.generic_visit(node)
 
     def visit_Import(self, node):
         for alias in node.names:
