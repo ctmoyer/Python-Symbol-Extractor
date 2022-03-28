@@ -16,6 +16,8 @@ def getArgs() -> dict:
                             When a negative number is present, the recursion will explore all subfolders without limit." )
     parser.add_argument( '-d','--dump', nargs='?', type=bool, const=True, default=False, 
                         help='Print a human readable version of the AST found by configured visitor methods.')
+    parser.add_argument( '--gitURL', nargs='?', type=str, default='https://github.com/ctmoyer/Python-Symbol-Extractor/', 
+                        help='Get markdown links to github repo built automatically.')
 
     return vars(parser.parse_args())
 
@@ -25,7 +27,8 @@ def getParsedOptions() -> dict:
         'file': None,
         'folder': None,
         'recursionLevel': None,
-        'dump': None
+        'dump': None,
+        'giturl': None
     }
 
     for option in argsDict:
@@ -36,6 +39,8 @@ def getParsedOptions() -> dict:
         elif option in ('recursionLevel'):
             optionsDict[option] = argsDict[option]
         elif option in ('dump'):
+            optionsDict[option] = argsDict[option]
+        elif option in ('gitURL'):
             optionsDict[option] = argsDict[option]
         else:
             assert False, f'Unhandled Exception; Option: {option}'

@@ -28,6 +28,7 @@ import helpers._utils as utils
 # from symbolAnalyzer import Analyzer
 from nodeProcessor import processTree
 from helpers.astpp import dump
+import markdownExporter
 
 # https://www.tutorialspoint.com/python/os_walk.htm
 # https://docs.python.org/3/library/getopt.html
@@ -47,7 +48,7 @@ def main():
         print(dump(tree))
 
     savedNodes = processTree(args, tree)
-    pprint(savedNodes)
+    # pprint(savedNodes)
 
     # JSON handling section
     jsonNodes = '['
@@ -56,9 +57,19 @@ def main():
         jsonNodes += ','
     jsonNodes = jsonNodes[:-1] + ']'
 
-    with open('jsonData.json', 'w') as outfile:
+    outputFilePath = Path('exports/jsonData.json')
+
+    with outputFilePath.open('w', encoding='utf-8') as outfile:
         outfile.write(jsonNodes)
 
+    with outputFilePath.open(encoding='utf-8') as infile:
+        code = json.load(infile)
+
+    # Split 
+    print()
+    outputFileName = ".".join(str(args['file'][0].as_posix()).split('/'))[:-3] + '.md'
+    print(outputFileName)
+    markdownExporter.generateMarkdown(code, 'docs', outputFileName)
 
 if __name__ == '__main__':
     main()

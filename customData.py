@@ -108,6 +108,10 @@ class FunctionDef_Symbol(Generic_Symbol):
 
                 # Determine if return exists, and what type to expect, if available
         if(self.node.returns and self.node.returns != None):
+            # TODO ERROR
+            # AttributeError: 'Subscript' object has no attribute 'id'
+            # Seemingly caused by markdownGenerator trying to run with nodeProcessor.py 
+            # as the target file.
             self.returns = self.node.returns.id
         else:
             # Check for return statement in body of function
