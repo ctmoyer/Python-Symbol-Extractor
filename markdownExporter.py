@@ -44,6 +44,8 @@ def main():
     
     generateMarkdown(codeDict)
 
+# TODO ENHANCEMENT
+# Need to encode a line break such that Github will recognize it.
 def generateMarkdown(codeDict, outputFolder, outputFile):
     outputString:str = ''
     for node in codeDict:
