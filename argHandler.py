@@ -4,7 +4,7 @@ import pathlib
 
 def getArgs() -> dict:
     parser = argparse.ArgumentParser(description="Analyze Python Files")
-    parser.add_argument( '-f', '--file', nargs='+', type=pathlib.Path,
+    parser.add_argument( '-f', '--file', type=pathlib.Path,
                         help="The file name of a Python file to analyze." )
     parser.add_argument( '--folder', type=pathlib.Path,
                         help="The path to a folder containing Python files to analyze." )
@@ -14,9 +14,9 @@ def getArgs() -> dict:
                             Positive integers represent how many layers deep the recursion should explore.\
                             -1 is the Default value when no value is supplied but thif flag is present.\
                             When a negative number is present, the recursion will explore all subfolders without limit." )
-    parser.add_argument( '-d','--dump', nargs='?', type=bool, const=True, default=False, 
+    parser.add_argument( '-d','--dump', type=bool, nargs='?', const=True, default=False, 
                         help='Print a human readable version of the AST found by configured visitor methods.')
-    parser.add_argument( '--gitURL', nargs='?', type=str, default='https://github.com/ctmoyer/Python-Symbol-Extractor/', 
+    parser.add_argument( '--gitURL', type=str, default='https://github.com/ctmoyer/Python-Symbol-Extractor/', 
                         help='Get markdown links to github repo built automatically.')
 
     return vars(parser.parse_args())

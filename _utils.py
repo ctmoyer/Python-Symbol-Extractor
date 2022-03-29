@@ -5,12 +5,18 @@ import os
 from pyclbr import Function
 from xml.dom.minidom import Attr
 
+# TODO DELETE 
+# Unecessary file; all functions are either better suited to being in 
+# another file, or the required functionality deserves it's own file. 
+
 #example not implemented function 
 def exampleFunc():
     raise NotImplementedError
 
 """ Begin Functions """
 
+# TODO REFACTOR
+# This belongs in a specific file for handling recursive file gathering. 
 def gatherFiles(folderPath='.'):    
     for root, dirs, files in os.walk(folderPath, topdown=False):
         for name in files:
@@ -18,6 +24,8 @@ def gatherFiles(folderPath='.'):
         for name in dirs:
             print(os.path.join(root, name))
 
+# TODO REFACTOR
+# This isn't used. Decide whether to make use of hashing or not. 
 def getFileHexHash(filePath)->int:
     #type 
     hash = sha1()
@@ -45,6 +53,8 @@ def getNodeIdentifiers(node):
     return idens
 
 
+# TODO REFACTOR
+# Consider moving this to customData.py and find a better solution to this... 
 def GatherArgs(node):
     # arguments node type doesn't support dynamic key access.
     # was forced to manually enumerate all types of fields.
